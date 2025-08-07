@@ -1,0 +1,7 @@
+streamlit
+pillow
+numpy==1.24.4
+opencv-python
+torch
+torchvision
+scipy
