@@ -6,12 +6,10 @@ import subprocess
 from pathlib import Path
 from PIL import Image, ImageOps
 import numpy as np
-# import cv2
+import cv2
 import subprocess
 import sys
-sys.executable, "-m", "pip", "install", "opencv-python-headless==4.8.0.76"
 
-import cv2
 
 from calculate_cork import process_cork_folder
 from calculate_liquid import process_liquid_folder
