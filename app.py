@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from PIL import Image, ImageOps
 import numpy as np
-import cv2
+# import cv2
 import subprocess
 import sys
 
