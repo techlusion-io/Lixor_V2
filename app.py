@@ -13,10 +13,9 @@ import sys
 try:
     import cv2
 except ImportError:
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "opencv-python-headless==4.8.0.76"]
-    )
-    import cv2
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "opencv-python-headless==4.8.0.76"])
+
+import cv2
 
 from calculate_cork import process_cork_folder
 from calculate_liquid import process_liquid_folder
