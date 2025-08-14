@@ -4,7 +4,7 @@ import cv2
 import os
 from pathlib import Path
 
-MIN_REGION_AREA = 1000  # Minimum area (px) to consider a mask "valid"
+MIN_REGION_AREA = 1000
 
 PINK_LOWER = (180, 0, 100)
 PINK_UPPER = (255, 100, 255)

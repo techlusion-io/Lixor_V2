@@ -166,45 +166,41 @@ class Reader: # Reader for Labpics dataset
 
 
         return Img,AnnMap
-########################################################################################################################################################
-# ==========================Read image annotation and data===============================================================================================
+
     def LoadNext(self, pos, Hb=-1, Wb=-1): #
-# -----------------------------------Image and resize-----------------------------------------------------------------------------------------------------
-            if self.ClassBalance: # pick with equal class probability
+            if self.ClassBalance:
                 while (True):
                      CL=random.choice(self.AnnByCat.keys())
                      CatSize=len(self.AnnByCat[CL])
                      if CatSize>0: break
 
                 Nim = np.random.randint(CatSize)
-               # print("nim "+str(Nim)+"CL "+str(CL)+"  length"+str(len(self.AnnotationByCat[CL])))
                 AnnDir=self.AnnByCat[CL][Nim]
-            else: # Pick with equal class probabiliry
+            else: 
                 Nim = np.random.randint(len(self.AnnList))
                 AnnDir=self.AnnList[Nim]
                 CatSize=len(self.AnnList)
 
-            Img = cv2.imread(AnnDir+"/"+"Image.png")  # Load Image
-            if (Img.ndim == 2):  # If grayscale turn to rgb
+            Img = cv2.imread(AnnDir+"/"+"Image.png")  
+            if (Img.ndim == 2): 
                 Img = np.expand_dims(Img, 3)
                 Img = np.concatenate([Img, Img, Img], axis=2)
-            Img = Img[:, :, 0:3]  # Get first 3 channels incase there are more
-#-------------------------Read annotation--------------------------------------------------------------------------------
+            Img = Img[:, :, 0:3] 
+
             AnnDir+="/Semantic/"
             AnnMasks={}
             for i in CatName:
                 path=AnnDir+"/"+str(i)+"_"+CatName[i]+".png"
                 if os.path.exists(path):
-                    AnnMasks[CatName[i]]=cv2.imread(path)  # Load mask
+                    AnnMasks[CatName[i]]=cv2.imread(path)  
                 else:
-                    AnnMasks[CatName[i]] = np.zeros(Img.shape)  # Load mask
-#-------------------------Augment-----------------------------------------------------------------------------------------------
+                    AnnMasks[CatName[i]] = np.zeros(Img.shape) 
+
             Img,AnnMap=self.Augment(Img,AnnMasks,np.min([float(1000/CatSize)*0.5+0.06+1,1]))
-#-----------------------------------Crop and resize-----------------------------------------------------------------------------------------------------
+
             if not Hb==-1:
                Img, AnnMap = self.CropResize(Img, AnnMap, Hb, Wb)
 
-#---------------------------------------------------------------------------------------------------------------------------------
             self.BImg[pos] = Img
             for i in CatName:
 
@@ -215,20 +211,13 @@ class Reader: # Reader for Labpics dataset
                     self.BAnnMapsFR[CN][pos] = AnnMap[CN][:, :, 0]
                     self.BAnnMapsBG[CN][pos] = AnnMap[CN][:, :, 1]
 
-
-############################################################################################################################################################
-# Start load batch of images (multi  thread the reading will occur in background and will will be ready once waitLoad batch as finished
     def StartLoadBatch(self):
-        # =====================Initiate batch=============================================================================================
         while True:
             Hb = np.random.randint(low=self.MinSize, high=self.MaxSize)  # Batch hight
             Wb = np.random.randint(low=self.MinSize, high=self.MaxSize)  # batch  width
             if Hb*Wb<self.MaxPixels: break
         BatchSize =  np.int(np.min((np.floor(self.MaxPixels / (Hb * Wb)), self.MaxBatchSize)))
 
-
-        
-        #====================Start reading data multithreaded===========================================================
         self.BAnnMapsFR={}
         self.BAnnMapsBG = {}
         self.thread_list = []
@@ -244,16 +233,12 @@ class Reader: # Reader for Labpics dataset
             self.thread_list.append(th)
             th.start()
         self.itr+=BatchSize
-###########################################################################################################
-#Wait until the data batch loading started at StartLoadBatch is finished
+
     def WaitLoadBatch(self):
             for th in self.thread_list:
                  th.join()
-
-########################################################################################################################################################################################
+                 
     def LoadBatch(self):
-# Load batch for training (muti threaded  run in parallel with the training proccess)
-# return previously  loaded batch and start loading new batch
             self.WaitLoadBatch()
             Imgs=self.BImg
             Ignore=self.BIgnore
@@ -262,28 +247,25 @@ class Reader: # Reader for Labpics dataset
             self.StartLoadBatch()
             return Imgs, Ignore, AnnMapsFR, AnnMapsBG
 
-############################Load single image data with no augmentation for evaluaion mainly############################################################################################################################################################
     def LoadSingle(self):
-       # print(self.itr)
         if self.itr>=len(self.AnnList):
             self.epoch+=1
             self.itr=0
         AnnDir = self.AnnList[self.itr]
         self.itr+=1
-        Img = cv2.imread(AnnDir + "/" + "Image.png")  # Load Image
-        if (Img.ndim == 2):  # If grayscale turn to rgb
+        Img = cv2.imread(AnnDir + "/" + "Image.png") 
+        if (Img.ndim == 2):  
             Img = np.expand_dims(Img, 3)
             Img = np.concatenate([Img, Img, Img], axis=2)
-        Img = Img[:, :, 0:3]  # Get first 3 channels incase there are more
-        # -------------------------Read annotation--------------------------------------------------------------------------------
+        Img = Img[:, :, 0:3]  
         AnnDir += "/Semantic/"
         AnnMasks = {}
         for i in CatName:
             path = AnnDir + "/" + str(i) + "_" + CatName[i] + ".png"
             if os.path.exists(path):
-                AnnMasks[CatName[i]] = cv2.imread(path)  # Load mask
+                AnnMasks[CatName[i]] = cv2.imread(path)  
             else:
-                AnnMasks[CatName[i]] = np.zeros(Img.shape)  # Load mask
+                AnnMasks[CatName[i]] = np.zeros(Img.shape) 
 
         Ignore=AnnMasks['Ignore'][:,:,0]
         del AnnMasks['Ignore']

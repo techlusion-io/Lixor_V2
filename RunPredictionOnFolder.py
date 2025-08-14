@@ -13,7 +13,7 @@ import cv2
 InputDir="input images" # Folder of input images
 OutDir="output images" # Folder of output
 
-UseGPU=False # Use GPU or CPU  for prediction (GPU faster but demend nvidia GPU and CUDA installed else set UseGPU to False)
+UseGPU=True # Use GPU or CPU  for prediction (GPU faster but demend nvidia GPU and CUDA installed else set UseGPU to False)
 FreezeBatchNormStatistics=False # wether to freeze the batch statics on prediction  setting this true or false might change the prediction mostly False work better
 OutEnding="" # Add This to file name
 if not os.path.exists(OutDir): os.makedirs(OutDir) # Create folder for trained weight

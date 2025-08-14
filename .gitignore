@@ -3,4 +3,12 @@
 \combined_cork_output
 \combined_liquid_output
 \combined_vessel_output
+\combined_base_output
 \__pycache__
+result hand and normal.pdf
+result with label.pdf
+result without label in hand.pdf
+result without labels.pdf
+cuda_check.py
+\input images
+\output images

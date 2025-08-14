@@ -30,7 +30,7 @@ def calculate_liquid_percentage(liquid_mask, vessel_mask, cork_mask=None):
     liquid_area = lmask.sum()
     cork_area = cmask.sum() if cmask is not None else 0
 
-    denominator = max(vessel_area - cork_area, 1)  # avoid zero division
+    denominator = max(vessel_area - cork_area, 1) 
     percent = (liquid_area / denominator) * 100 if denominator > 0 else 0.0
 
     return percent, {

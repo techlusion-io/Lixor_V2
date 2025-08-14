@@ -8,8 +8,7 @@ import threading
 import random
 import ChemReader as ChemReader
 import torch
-######################Class used for evaluating net accuracy######################################################################################
-#########################################################################################################################
+
 class Evaluator:
     def __init__(self, AnnDir,OutFile):
         self.AnnDir = AnnDir
@@ -18,7 +17,7 @@ class Evaluator:
         f.close()
         print("-------------------------------------Creating test evaluator------------------------------------------------------")
         self.Reader = ChemReader.Reader(MainDir=self.AnnDir, TrainingMode=False)
-##########################################################Evaluating net accuracy###########################333
+
     def Eval(self,Net,itr):
         print("Evaluating")
         Finished=False
@@ -50,15 +49,6 @@ class Evaluator:
                                 ImSum[nm] += 1
 
 
-                                # if GT.sum()>0:
-                                #     print(nm)
-                                #     Im=Img[0].copy()
-                                #     Im[:, :, 0] *= 1 - GT.astype(np.uint8)
-                                #     Im[:, :, 2] *= ROI.astype(np.uint8)
-                                #     Im[:, :, 1] *= 1 - Pred.astype(np.uint8)
-                                #     misc.imshow(Im)
-
-
         f = open(self.OutFile, "a")
         txt="\n=================================================================================\n"
         txt+=str(itr)+"\n"
@@ -70,9 +60,3 @@ class Evaluator:
         f.write(txt)
         f.close()
         print(txt)
-
-
-
-
-
-
