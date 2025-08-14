@@ -5,3 +5,4 @@ opencv-python-headless==4.8.0.76
 torch
 torchvision
 scipy
+ultralytics
